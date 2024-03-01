@@ -10,7 +10,6 @@ fptr1 = fopen(filename, "r");
 if (fptr1 == NULL)
 {
 printf("Cannot open file %s \n", filename);
-exit(0);
 }
 printf("Enter the filename to open for writing \n");
 scanf("%s", filename);
@@ -18,7 +17,6 @@ fptr2 = fopen(filename, "w");
 if (fptr2 == NULL)
 {
 printf("Cannot open file %s \n", filename);
-exit(0);
 }
 c = fgetc(fptr1);
 while (c != EOF)
@@ -33,7 +31,14 @@ return 0;
 }
 
 output:
-Enter the filename to open for reading 
-fptr2
-Cannot open file fptr2 
+enter the filename to open for reading
 
+sravani
+
+Cannot open file lucky
+
+enter the file name to open for writing
+
+sneha
+
+contents copied to pranitha
