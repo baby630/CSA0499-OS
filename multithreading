@@ -1,0 +1,43 @@
+#include <stdio.h>
+#include <pthread.h>
+
+#define NUM_THREADS 2
+
+// Shared variable
+int shared_var = 0;
+
+// Function that each thread will execute
+void *thread_func(void *thread_id) {
+    int id = *(int *)thread_id;
+    printf("Thread %d: Before increment: shared_var = %d\n", id, shared_var);
+    shared_var++;
+    printf("Thread %d: After increment: shared_var = %d\n", id, shared_var);
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t threads[NUM_THREADS];
+    int thread_ids[NUM_THREADS];
+
+    // Create threads
+    for (int i = 0; i < NUM_THREADS; i++) {
+        thread_ids[i] = i;
+        pthread_create(&threads[i], NULL, thread_func, (void *)&thread_ids[i]);
+    }
+
+    // Wait for threads to finish
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    printf("Final value of shared_var = %d\n", shared_var);
+
+    return 0;
+}
+
+output:
+Thread 0: Before increment: shared_var = 0
+Thread 1: Before increment: shared_var = 0
+Thread 0: After increment: shared_var = 1
+Thread 1: After increment: shared_var = 2
+Final value of shared_var = 2
