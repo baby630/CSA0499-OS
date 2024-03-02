@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_FRAMES 3
+#define MAX_PAGES 20
+
+typedef struct {
+    int page_number;
+    int last_used;
+} Page;
+
+int main() {
+    int page_faults = 0;
+    Page frames[MAX_FRAMES];
+    int time = 0;
+
+    for (int i = 0; i < MAX_FRAMES; i++) {
+        frames[i].page_number = -1;
+        frames[i].last_used = 0;
+    }
+
+    Page pages[MAX_PAGES];
+    for (int i = 0; i < MAX_PAGES; i++) {
+        pages[i].page_number = rand() % 10;
+        pages[i].last_used = -1;
+    }
+
+    for (int i = 0; i < MAX_PAGES; i++) {
+       
+        int found = 0;
+        for (int j = 0; j < MAX_FRAMES; j++) {
+            if (frames[j].page_number == pages[i].page_number) {
+                found = 1;
+                frames[j].last_used = time;
+                break;
+            }
+        }
+        if (!found) {
+
+            page_faults++;
+
+            int oldest_index = 0;
+            for (int j = 1; j < MAX_FRAMES; j++) {
+                if (frames[j].last_used < frames[oldest_index].last_used) {
+                    oldest_index = j;
+                }
+            }
+
+            frames[oldest_index] = pages[i];
+            frames[oldest_index].last_used = time;
+        }
+
+        time++;
+    }
+
+    printf("Number of page faults: %d\n", page_faults);
+
+    return 0;
+}
+
+OUTPUT:
+
+Number of page faults: 7
