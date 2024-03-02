@@ -1,0 +1,165 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define FILE_NAME "employees.dat"
+
+struct Employee {
+    int id;
+    char name[30];
+    char department[20];
+    float salary;
+};
+
+void show_record(int record_number) {
+    FILE *fp;
+    struct Employee employee;
+    fp = fopen(FILE_NAME, "rb");
+    if (fp == NULL) {
+        printf("File not found!\n");
+        return;
+    }
+    fseek(fp, (record_number - 1) * sizeof(struct Employee), SEEK_SET);
+    fread(&employee, sizeof(struct Employee), 1, fp);
+    printf("ID: %d\n", employee.id);
+    printf("Name: %s\n", employee.name);
+    printf("Department: %s\n", employee.department);
+    printf("Salary: %.2f\n", employee.salary);
+    fclose(fp);
+}
+
+void update_record(int record_number) {
+    FILE *fp;
+    struct Employee employee;
+    fp = fopen(FILE_NAME, "rb+");
+    if (fp == NULL) {
+        printf("File not found!\n");
+        return;
+    }
+    fseek(fp, (record_number - 1) * sizeof(struct Employee), SEEK_SET);
+    fread(&employee, sizeof(struct Employee), 1, fp);
+    printf("Enter new name: ");
+    scanf("%s", employee.name);
+    printf("Enter new department: ");
+    scanf("%s", employee.department);
+    printf("Enter new salary: ");
+    scanf("%f", &employee.salary);
+    fseek(fp, (record_number - 1) * sizeof(struct Employee), SEEK_SET);
+    fwrite(&employee, sizeof(struct Employee), 1, fp);
+    fclose(fp);
+}
+
+void add_record() {
+    FILE *fp;
+    struct Employee employee;
+    fp = fopen(FILE_NAME, "ab");
+    if (fp == NULL) {
+        printf("File not found!\n");
+        return;
+    }
+    printf("Enter ID: ");
+    scanf("%d", &employee.id);
+    printf("Enter name: ");
+    scanf("%s", employee.name);
+    printf("Enter department: ");
+    scanf("%s", employee.department);
+    printf("Enter salary: ");
+    scanf("%f", &employee.salary);
+    fwrite(&employee, sizeof(struct Employee), 1, fp);
+    fclose(fp);
+}
+
+int main() {
+    int choice;
+    int record_number;
+    while (1) {
+        printf("\n1. Show record\n");
+        printf("2. Update record\n");
+        printf("3. Add record\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter record number: ");
+                scanf("%d", &record_number);
+                show_record(record_number);
+                break;
+            case 2:
+                printf("Enter record number: ");
+                scanf("%d", &record_number);
+                update_record(record_number);
+                break;
+            case 3:
+                add_record();
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+    }
+    return 0;
+}
+
+output :
+
+* intial run
+1. Show record
+2. Update record
+3. Add record
+4. Exit
+Enter choice: 1
+Enter record number: 1
+File not found!
+
+1. Show record
+2. Update record
+3. Add record
+4. Exit
+Enter choice: 2
+Enter record number: 1
+File not found!
+
+* after updating record 1 :
+
+1. Show record
+2. Update record
+3. Add record
+4. Exit
+Enter choice: 1
+Enter record number: 1
+ID: 101
+Name: John Doe
+Department: IT
+Salary: 50000.00
+
+1. Show record
+2. Update record
+3. Add record
+4. Exit
+Enter choice: 2
+Enter record number: 1
+Enter new name: Jane Doe
+Enter new department: HR
+Enter new salary: 55000.00
+
+*adding new record:
+
+1. Show record
+2. Update record
+3. Add record
+4. Exit
+Enter choice: 3
+Enter ID: 102
+Enter name: Alice Smith
+Enter department: Marketing
+Enter salary: 60000.00
+
+*exiting the program:
+
+1. Show record
+2. Update record
+3. Add record
+4. Exit
+Enter choice: 4
