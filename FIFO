@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_FRAMES 3
+#define MAX_PAGES 20
+
+// Structure to represent a page
+typedef struct {
+    int page_number;
+    int frame_number;
+} Page;
+
+int main() {
+    int page_faults = 0;
+    Page frames[MAX_FRAMES];
+    int front = 0, rear = 0;
+
+    // Initialize frames to -1 to indicate that they are empty
+    for (int i = 0; i < MAX_FRAMES; i++) {
+        frames[i].page_number = -1;
+    }
+
+    // Initialize pages to random numbers
+    Page pages[MAX_PAGES];
+    for (int i = 0; i < MAX_PAGES; i++) {
+        pages[i].page_number = rand() % 10;
+        pages[i].frame_number = -1;
+    }
+
+    // Simulate FIFO page replacement algorithm
+    for (int i = 0; i < MAX_PAGES; i++) {
+        // Check if the page is already in memory
+        int found = 0;
+        for (int j = 0; j < MAX_FRAMES; j++) {
+            if (frames[j].page_number == pages[i].page_number) {
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            // Page fault
+            page_faults++;
+
+            // Replace the page at the front of the queue
+            frames[front] = pages[i];
+            front = (front + 1) % MAX_FRAMES;
+        }
+    }
+
+    // Print the number of page faults
+    printf("Number of page faults: %d\n", page_faults);
+
+    return 0;
+}
